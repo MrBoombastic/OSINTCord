@@ -22,9 +22,9 @@
     - Run the binary.
 - By using source code:
     - Clone this repository.
-    - Make sure that you have Node.JS v17+ installed.
+    - Make sure that you have Node.JS v16+ installed.
     - **IMPORTANT**: In `package.json` REPLACE `"discord.js-selfbot-v13": "2.8.14"`
-      with `"discord.js-selfbot-v13": "2.10.5""` (this is
+      with `"discord.js-selfbot-v13": "2.10.5"` (this is
       a temporary solution, until `vercel/pkg` will finally support ESM).
     - Install dependencies by `npm i`.
     - Fill in the `config.json` file as above and place it in `src` directory.
