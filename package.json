@@ -1,0 +1,33 @@
+{
+  "name": "osintcord",
+  "version": "1.0.0",
+  "description": "Get data of (nearly) all of Discord guild members",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrBoombastic/OSINTCord.git"
+  },
+  "keywords": [
+    "Discord",
+    "osint",
+    "selfbot"
+  ],
+  "author": "MrBoombastic",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/MrBoombastic/OSINTCord/issues"
+  },
+  "bin": "src/index.js",
+  "pkg": {
+    "assets": [
+      "node_modules/vm2/**/*"
+    ]
+  },
+  "homepage": "https://github.com/MrBoombastic/OSINTCord#readme",
+  "dependencies": {
+    "discord.js-selfbot-v13": "2.8.14"
+  }
+}

@@ -1,3 +1,9 @@
+# Config
+src/config.json
+src/data-*
+
+# IDE
+.idea
 # Logs
 logs
 *.log
