@@ -20,7 +20,7 @@ client.on('ready', async () => {
 ██║   ██║███████╗██║██╔██╗ ██║   ██║   ██║     ██║   ██║██████╔╝██║  ██║
 ██║   ██║╚════██║██║██║╚██╗██║   ██║   ██║     ██║   ██║██╔══██╗██║  ██║
 ╚██████╔╝███████║██║██║ ╚████║   ██║   ╚██████╗╚██████╔╝██║  ██║██████╔╝
- ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝         v1.0
+ ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝         v1.1.0
  ${packagejson.dependencies["discord.js-selfbot-v13"] === "2.8.14" ? "Using GitHub Artifacts? Pls don't. :(" : ""}
 `);
     console.log(`OSINTCord ${client.user.username} is ready!`);
@@ -42,7 +42,7 @@ client.on('ready', async () => {
 
     // Bruteforce dictionary (searching nicknames by characters)
     method = "FETCH BRUTEFORCE";
-    await guild.members.fetchBruteforce({delay: config.delay});
+    await guild.members.fetchBruteforce({delay: config.delay, dictionary: config.dictionary});
 
     // Fetching members from sidebar, may fetch additional online members, if guild has > 1000
     method = "OVERLAP MEMBERLIST";
