@@ -3,5 +3,6 @@
   "channelID": "channel ID",
   "spacing": "\t\t",
   "token": "user account token",
-  "delay": 1000
+  "delay": 1000,
+  "dictionary": " !\"#$%&'()*+,-./0123456789:;<=>?@[]^_`abcdefghijklmnopqrstuvwxyz{|}~"
 }
