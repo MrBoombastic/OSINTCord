@@ -12,7 +12,7 @@
 ## Usage:
 
 - By using binaries (experimental = using old dependencies):
-    - Download binary from "Releases" tab.
+    - Download binary from "Actions" tab (click the newest workflow and scroll down to "Artifacts").
     - Fill in the `config.json` file.
         - `guildID`: The guild ID you want to get data from.
         - `channelID`: The channel ID, which also will be used to get data from.
