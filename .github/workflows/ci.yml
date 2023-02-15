@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    branches:
+      master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - x64
+          - arm64
+        node-version:
+          - node16
+        os:
+          - linux
+          - macos
+          - win
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - run: npm install
+
+      - name: Package into node binary
+        uses: lando/pkg-action@v2
+        with:
+          entrypoint: ./src/index.js
+          arch: ${{ matrix.arch }}
+          node-version: ${{ matrix.node-version }}
+          os: ${{ matrix.os }}

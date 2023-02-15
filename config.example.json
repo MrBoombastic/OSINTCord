@@ -1,0 +1,7 @@
+{
+  "guildID": "guild ID",
+  "channelID": "channel ID",
+  "spacing": "\t\t",
+  "token": "user account token",
+  "delay": 1000
+}
