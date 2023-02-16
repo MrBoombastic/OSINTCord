@@ -1,6 +1,6 @@
 {
   "name": "osintcord",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Get data of (nearly) all of Discord guild members",
   "main": "src/index.js",
   "scripts": {
