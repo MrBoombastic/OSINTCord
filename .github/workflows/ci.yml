@@ -27,7 +27,10 @@ jobs:
         with:
           node-version: '16'
 
-      - run: npm install
+      - run: npm i -g
+      - run: yarn
+      - run: npm ls axios
+      - run: npm ls node-fetch
 
       - name: Package into node binary
         uses: lando/pkg-action@v2
