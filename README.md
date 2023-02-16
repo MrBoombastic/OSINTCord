@@ -11,7 +11,7 @@
 
 ## Usage:
 
-- By using binaries (experimental = using old dependencies):
+- By using binaries:
     - Download binary from "Actions" tab (click the newest workflow and scroll down to "Artifacts").
     - Fill in the `config.json` file.
         - `guildID`: The guild ID you want to get data from.
@@ -22,14 +22,11 @@
     - Run the binary.
 - By using source code:
     - Clone this repository.
-    - Make sure that you have Node.JS v17+ installed.
-    - **IMPORTANT**: In `package.json` REPLACE `"discord.js-selfbot-v13": "2.8.14"`
-      with `"discord.js-selfbot-v13": "2.10.5""` (this is
-      a temporary solution, until `vercel/pkg` will finally support ESM).
-    - Install dependencies by `npm i`.
+    - Make sure that you have Node.JS v16+ installed.
+    - Install dependencies by `npm i` or `yarn`.
     - Fill in the `config.json` file as above and place it in `src` directory.
-    - Run `node src/index.js` in the cloned directory.
+    - Run `node src/index.js`.
 
-## Worth reading
+## Worth reading:
 
 - https://github.com/aiko-chan-ai/discord.js-selfbot-v13/blob/main/Document/FetchGuildMember.md
