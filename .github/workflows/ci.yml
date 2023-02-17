@@ -1,12 +1,11 @@
 name: Release
 
 on:
-  push:
-    branches:
-      master
+  release:
+    types: [ created ]
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,15 +26,24 @@ jobs:
         with:
           node-version: '16'
 
-      - run: npm i -g
       - run: yarn
       - run: npm ls axios
       - run: npm ls node-fetch
 
       - name: Package into node binary
         uses: lando/pkg-action@v2
+        id: pack
         with:
           entrypoint: ./src/index.js
           arch: ${{ matrix.arch }}
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
+          upload: false
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.pack.outputs.file }}
+          asset_name: "OSINTcord-${{ matrix.os }}-${{ matrix.arch }}"
+          tag: ${{ github.ref }}

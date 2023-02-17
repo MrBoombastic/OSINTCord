@@ -12,7 +12,7 @@
 ## Usage:
 
 - By using binaries:
-    - Download binary from "Actions" tab (click the newest workflow and scroll down to "Artifacts").
+    - Download binary from [Releases](https://github.com/MrBoombastic/OSINTCord/releases) tab.
     - Fill in the `config.json` file.
         - `guildID`: The guild ID you want to get data from.
         - `channelID`: The channel ID, which also will be used to get data from.
@@ -23,7 +23,7 @@
 - By using source code:
     - Clone this repository.
     - Make sure that you have Node.JS v16+ installed.
-    - Install dependencies by `npm i` or `yarn`.
+    - Install dependencies by `yarn`.
     - Fill in the `config.json` file as above and place it in `src` directory.
     - Run `node src/index.js`.
 
