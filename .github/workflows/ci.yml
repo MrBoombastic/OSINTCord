@@ -5,7 +5,7 @@ on:
     types: [ created ]
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,18 +32,18 @@ jobs:
 
       - name: Package into node binary
         uses: lando/pkg-action@v2
+        id: pack
         with:
           entrypoint: ./src/index.js
           arch: ${{ matrix.arch }}
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
+          upload: false
 
-      - run: echo ${{ steps.pkg-action.outputs.file }}
-
-      - name: Upload to Release tab
-        uses: xresloader/upload-to-github-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          file: "OSINTCord-node*"
-          tags: true
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ steps.pack.outputs.file }}
+          asset_name: "OSINTcord-${{ matrix.os }}-${{ matrix.arch }}"
+          tag: ${{ github.ref }}
