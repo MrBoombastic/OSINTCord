@@ -1,9 +1,8 @@
 name: Release
 
 on:
-  push:
-    branches:
-      master
+  release:
+    types: [ created ]
 
 jobs:
   release:
@@ -27,7 +26,6 @@ jobs:
         with:
           node-version: '16'
 
-      - run: npm i -g
       - run: yarn
       - run: npm ls axios
       - run: npm ls node-fetch
@@ -39,3 +37,13 @@ jobs:
           arch: ${{ matrix.arch }}
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
+
+      - run: echo ${{ steps.pkg-action.outputs.file }}
+
+      - name: Upload to Release tab
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "OSINTCord-node*"
+          tags: true
