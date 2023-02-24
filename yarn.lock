@@ -125,6 +125,11 @@ combined-stream@^1.0.8:
   dependencies:
     delayed-stream "~1.0.0"
 
+dayjs@^1.11.7:
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
+  integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
+
 delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
@@ -135,7 +140,7 @@ discord-api-types@^0.37.20, discord-api-types@^0.37.31:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.34.tgz#0cf04b51adc1537884bb466150e8b11204261be6"
   integrity sha512-3sX2QMX2vLjT93n6+c1rN6lM6qWHycjYol6x/ls6U5hbZPdGH00dRMjg2csF58ISMf7DGV/6inDKgY1u5niWhA==
 
-"discord.js-selfbot-v13@https://github.com/MrBoombastic/discord.js-selfbot-v13#old-axios":
+"discord.js-selfbot-v13@https://github.com/MrBoombastic/discord.js-selfbot-v13#old-deps":
   version "2.10.5"
   resolved "https://github.com/MrBoombastic/discord.js-selfbot-v13#417844e29f039da198f0f73e60b95faf43befc40"
   dependencies:

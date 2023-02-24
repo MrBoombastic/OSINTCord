@@ -1,18 +1,25 @@
+// Including libraries
 const fs = require('fs');
 const {Client} = require('discord.js-selfbot-v13');
+global.dayjs = require('dayjs');
+dayjs.extend(require('dayjs/plugin/localizedFormat'));
 const {formatUserData, checkConfig} = require("./utils.js");
 const client = new Client({
     checkUpdate: false,
     partials: ["GUILD_MEMBER"]
 });
+
+// Config is being stored here
 let config;
 
 // Config file validation
-console.log("Checking config.json...");
 try {
+    console.log("Checking config.json...");
     config = JSON.parse(fs.readFileSync("./config.json", "UTF-8"));
 } catch (e) {
     return console.error("ERROR: missing config file!");
+} finally {
+    console.log("Checking config file done!");
 }
 const configStatus = checkConfig(config);
 if (!configStatus.ok) {
@@ -20,8 +27,20 @@ if (!configStatus.ok) {
     process.exit(1);
 }
 
+// Preparing date formatting
+const locales = require('dayjs/locale.json');
+let foundLocale = false;
+for (const locale of locales) {
+    require(`dayjs/locale/${locale.key}`);
+    if (locale.key === config.dateLocale) foundLocale = true;
+}
+if (foundLocale) dayjs.locale(config.dateLocale);
+else {
+    console.warn(`WARNING: locale '${config.dateLocale}' not found. Using 'en' as fallback.`);
+    dayjs.locale("en");
+}
 
-// Just informational
+// Just informational things
 let method = "";
 
 client.on('rateLimit', async (data) => {
@@ -36,7 +55,7 @@ client.on('ready', async () => {
 ██║   ██║███████╗██║██╔██╗ ██║   ██║   ██║     ██║   ██║██████╔╝██║  ██║
 ██║   ██║╚════██║██║██║╚██╗██║   ██║   ██║     ██║   ██║██╔══██╗██║  ██║
 ╚██████╔╝███████║██║██║ ╚████║   ██║   ╚██████╗╚██████╔╝██║  ██║██████╔╝
- ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝     v1.2.0
+ ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝     v1.3.0
 `);
     console.log(`OSINTCord ${client.user.username} is ready!`);
 
@@ -49,10 +68,11 @@ client.on('ready', async () => {
     console.log(`Guild: target acquired: ${guild.name}`);
 
     // Getting target channel
-    const channel = await client.channels.cache.get(config.channelID);
+    const channel = await guild.channels.cache.get(config.channelID);
     if (!channel) {
         console.error("WARNING: selected channel is missing! Member list method will be skipped.");
     }
+    console.log(`Channel: target acquired: ${channel.name}`);
 
     // Initiating progress loop
     const loading = setInterval(() => {
@@ -60,7 +80,6 @@ client.on('ready', async () => {
     }, 3000);
 
     // https://github.com/aiko-chan-ai/discord.js-selfbot-v13/blob/main/Document/FetchGuildMember.md
-
     // Bruteforce dictionary (searching nicknames by characters)
     method = "FETCH BRUTEFORCE";
     await guild.members.fetchBruteforce({
@@ -82,10 +101,10 @@ client.on('ready', async () => {
     console.log(`Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`);
 
     // Generating text output
-    const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "avatar_url\n\n"];
+    const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "avatar_url\n"];
     let data = header.join(config.spacing);
 
-    data += guild.members.cache.map(member => formatUserData(member, config.spacing)).join("\n");
+    data += guild.members.cache.map(member => formatUserData(member, config.spacing, config.dateFormat)).join("\n");
 
     // Stop loading interval
     clearInterval(loading);
