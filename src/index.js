@@ -57,7 +57,7 @@ client.on("ready", async () => {
 ╚██████╔╝███████║██║██║ ╚████║   ██║   ╚██████╗╚██████╔╝██║  ██║██████╔╝
  ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝     v1.3.0
 `);
-    console.log(`OSINTCord ${client.user.username} is ready!`);
+    console.log(`OSINTCord ${client.user.username} (${client.user?.emailAddress || "NO EMAIL"}) is ready!`);
 
     // Getting target guild
     const guild = await client.guilds.cache.get(config.guildID);
