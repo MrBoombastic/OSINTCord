@@ -83,24 +83,24 @@ client.on("ready", async () => {
         refreshLoading(loading, "[FETCH WITH PERMS]", guild);
     }, 500);
     // In my fork, this only fetches members if user has at least one of these perms: KICK_MEMBERS, BAN_MEMBERS, MANAGE_ROLES
-    await guild.fetch();
+    await guild.members.fetch();
     clearInterval(firstStage);
-
-    // https://github.com/aiko-chan-ai/discord.js-selfbot-v13/blob/main/Document/FetchGuildMember.md
-    // Bruteforce dictionary (searching nicknames by characters)
-    refreshLoading(loading, "[FETCH BRUTEFORCE]", guild);
-    const secondStage = setInterval(function () {
+    if (guild.members.cache.size !== guild.memberCount) {
+        // https://github.com/aiko-chan-ai/discord.js-selfbot-v13/blob/main/Document/FetchGuildMember.md
+        // Bruteforce dictionary (searching nicknames by characters)
         refreshLoading(loading, "[FETCH BRUTEFORCE]", guild);
-    }, 500);
-    await guild.members.fetchBruteforce({
-        delay: config.delay,
-        limit: 100,  //max limit is 100 at once
-        dictionary: Array.from(new Set(config.dictionary.toLowerCase())) //deduplication
-    });
-    clearInterval(secondStage);
+        const secondStage = setInterval(function () {
+            refreshLoading(loading, "[FETCH BRUTEFORCE]", guild);
+        }, 500);
+        await guild.members.fetchBruteforce({
+            delay: config.delay,
+            limit: 100,  //max limit is 100 at once
+            dictionary: Array.from(new Set(config.dictionary.toLowerCase())) //deduplication
+        });
+        clearInterval(secondStage);
+    }
 
-
-    if (channel) {
+    if (channel && guild.members.cache.size !== guild.memberCount) {
         // Fetching members from sidebar, may fetch additional online members, if guild has > 1000
         refreshLoading(loading, "[OVERLAP MEMBERLIST]", guild);
         const thirdStage = setInterval(function () {
