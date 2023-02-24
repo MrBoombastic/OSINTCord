@@ -43,6 +43,10 @@ You can use some default options from [config.example.json](config.example.json)
 - `dateLocale`: locale used in the parsed
   date ([list of supported locales](https://github.com/iamkun/dayjs/tree/dev/src/locale))
 
+## FAQ:
+
+- Q: I'm getting `GUILD_MEMBERS_TIMEOUT` errors. Help!<br>A: Increase `delay` time in config.
+
 ## Worth reading:
 
 - https://github.com/aiko-chan-ai/discord.js-selfbot-v13/blob/main/Document/FetchGuildMember.md

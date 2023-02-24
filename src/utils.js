@@ -15,5 +15,10 @@ module.exports = {
             if (!(prop in config)) return {ok: false, prop};
         }
         return {ok: true};
+    },
+
+    refreshLoading: function (ora, prefix, guild) {
+        ora.prefixText = prefix;
+        ora.text = `Fetching members... ${guild.members.cache.size}/${guild.memberCount} => ${Math.floor(guild.members.cache.size / guild.memberCount * 100)}%`;
     }
 };

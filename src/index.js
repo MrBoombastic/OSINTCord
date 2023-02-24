@@ -1,8 +1,9 @@
 // Including libraries
-const fs = require('fs');
-const {Client} = require('discord.js-selfbot-v13');
-global.dayjs = require('dayjs');
-dayjs.extend(require('dayjs/plugin/localizedFormat'));
+const fs = require("fs");
+const {Client} = require("discord.js-selfbot-v13");
+const ora = require("ora");
+global.dayjs = require("dayjs");
+dayjs.extend(require("dayjs/plugin/localizedFormat"));
 const {formatUserData, checkConfig} = require("./utils.js");
 const client = new Client({
     checkUpdate: false,
@@ -28,7 +29,8 @@ if (!configStatus.ok) {
 }
 
 // Preparing date formatting
-const locales = require('dayjs/locale.json');
+const locales = require("dayjs/locale.json");
+const {refreshLoading} = require("./utils");
 let foundLocale = false;
 for (const locale of locales) {
     require(`dayjs/locale/${locale.key}`);
@@ -41,14 +43,12 @@ else {
 }
 
 // Just informational things
-let method = "";
-
-client.on('rateLimit', async (data) => {
+client.on("rateLimit", async (data) => {
     console.log(data);
 });
 
 // When bot is ready
-client.on('ready', async () => {
+client.on("ready", async () => {
     console.log(`
  ██████╗ ███████╗██╗███╗   ██╗████████╗ ██████╗ ██████╗ ██████╗ ██████╗ 
 ██╔═══██╗██╔════╝██║████╗  ██║╚══██╔══╝██╔════╝██╔═══██╗██╔══██╗██╔══██╗
@@ -74,31 +74,46 @@ client.on('ready', async () => {
     }
     console.log(`Channel: target acquired: ${channel.name}`);
 
-    // Initiating progress loop
-    const loading = setInterval(() => {
-        console.log(`[${method}] Fetching members... ${guild.members.cache.size}/${guild.memberCount} => ${Math.floor(guild.members.cache.size / guild.memberCount * 100)}%`);
-    }, 3000);
+    // Initiating progress loop, useful when using other methods taking time
+    const loading = ora("Starting!").start();
+
+    // Fetching!
+    refreshLoading(loading, "[FETCH WITH PERMS]", guild);
+    const firstStage = setInterval(function () {
+        refreshLoading(loading, "[FETCH WITH PERMS]", guild);
+    }, 500);
+    // In my fork, this only fetches members if user has at least one of these perms: KICK_MEMBERS, BAN_MEMBERS, MANAGE_ROLES
+    await guild.fetch();
+    clearInterval(firstStage);
 
     // https://github.com/aiko-chan-ai/discord.js-selfbot-v13/blob/main/Document/FetchGuildMember.md
     // Bruteforce dictionary (searching nicknames by characters)
-    method = "FETCH BRUTEFORCE";
+    refreshLoading(loading, "[FETCH BRUTEFORCE]", guild);
+    const secondStage = setInterval(function () {
+        refreshLoading(loading, "[FETCH BRUTEFORCE]", guild);
+    }, 500);
     await guild.members.fetchBruteforce({
         delay: config.delay,
         limit: 100,  //max limit is 100 at once
         dictionary: Array.from(new Set(config.dictionary.toLowerCase())) //deduplication
     });
+    clearInterval(secondStage);
 
     if (channel) {
         // Fetching members from sidebar, may fetch additional online members, if guild has > 1000
-        method = "OVERLAP MEMBERLIST";
+        refreshLoading(loading, "[OVERLAP MEMBERLIST]", guild);
+        const thirdStage = setInterval(function () {
+            refreshLoading(loading, "[OVERLAP MEMBERLIST]", guild);
+        }, 500);
         for (let index = 0; index <= guild.memberCount; index += 100) {
             await guild.members.fetchMemberList(config.channelID, index, index !== 100).catch(() => false);
             await client.sleep(config.delay);
         }
+        clearInterval(thirdStage);
     }
 
     // Done!
-    console.log(`Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`);
+    loading.text = `Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`;
 
     // Generating text output
     const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "avatar_url\n"];
@@ -107,7 +122,7 @@ client.on('ready', async () => {
     data += guild.members.cache.map(member => formatUserData(member, config.spacing, config.dateFormat)).join("\n");
 
     // Stop loading interval
-    clearInterval(loading);
+    loading.succeed("Done!");
 
     // Save to file
     const filename = `data-${Date.now()}.txt`;
