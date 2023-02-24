@@ -99,6 +99,7 @@ client.on("ready", async () => {
     });
     clearInterval(secondStage);
 
+
     if (channel) {
         // Fetching members from sidebar, may fetch additional online members, if guild has > 1000
         refreshLoading(loading, "[OVERLAP MEMBERLIST]", guild);
@@ -113,16 +114,14 @@ client.on("ready", async () => {
     }
 
     // Done!
-    loading.text = `Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`;
+    loading.prefixText = "";
+    loading.succeed(`Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`);
 
     // Generating text output
     const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "avatar_url\n"];
     let data = header.join(config.spacing);
 
     data += guild.members.cache.map(member => formatUserData(member, config.spacing, config.dateFormat)).join("\n");
-
-    // Stop loading interval
-    loading.succeed("Done!");
 
     // Save to file
     const filename = `data-${Date.now()}.txt`;
