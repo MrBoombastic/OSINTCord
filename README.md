@@ -11,7 +11,7 @@
 
 ## Warning:
 
-This app uses [fork of discord.js-selfbot-v13](https://github.com/MrBoombastic/discord.js-selfbot-v13).
+This app uses [fork of discord.js-selfbot-v13](https://github.com/MrBoombastic/discord.js-selfbot-v13/tree/old-deps).
 
 "I don't take any responsibility for blocked Discord accounts that used this module.
 Using this on a user account is prohibited by the Discord TOS and can lead to the account block."
