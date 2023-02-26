@@ -24,7 +24,7 @@
   "pkg": {
     "assets": [
       "node_modules/vm2/**/*",
-      "node_modules/dayjs/locale/*,
+      "node_modules/dayjs/locale/*"
     ]
   },
   "homepage": "https://github.com/MrBoombastic/OSINTCord#readme",
