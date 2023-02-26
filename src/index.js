@@ -4,14 +4,14 @@ const {Client} = require("discord.js-selfbot-v13");
 const ora = require("ora");
 global.dayjs = require("dayjs");
 dayjs.extend(require("dayjs/plugin/localizedFormat"));
-const {formatUserData, checkConfig} = require("./utils.js");
+const {saveAndExit, checkConfig} = require("./utils.js");
 const client = new Client({
     checkUpdate: false,
     partials: ["GUILD_MEMBER"]
 });
 
-// Config is being stored here
-let config;
+// Config and guild are stored here
+let config, guild;
 
 // Config file validation
 try {
@@ -55,24 +55,24 @@ client.on("ready", async () => {
 ██║   ██║███████╗██║██╔██╗ ██║   ██║   ██║     ██║   ██║██████╔╝██║  ██║
 ██║   ██║╚════██║██║██║╚██╗██║   ██║   ██║     ██║   ██║██╔══██╗██║  ██║
 ╚██████╔╝███████║██║██║ ╚████║   ██║   ╚██████╗╚██████╔╝██║  ██║██████╔╝
- ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝     v1.3.0
+ ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝     v1.4.0
 `);
     console.log(`OSINTCord ${client.user.username} (${client.user?.emailAddress || "NO EMAIL"}) is ready!`);
 
     // Getting target guild
-    const guild = await client.guilds.cache.get(config.guildID);
-    if (!guild) {
+    guild = await client.guilds.cache.get(config.guildID);
+    if (!guild?.name) {
         console.error("ERROR: selected guild is not available!");
         process.exit(1);
-    }
-    console.log(`Guild: target acquired: ${guild.name}`);
+    } else console.log(`Guild: target acquired: ${guild.name}`);
 
     // Getting target channel
     const channel = await guild.channels.cache.get(config.channelID);
-    if (!channel) {
-        console.error("WARNING: selected channel is missing! Member list method will be skipped.");
-    }
-    console.log(`Channel: target acquired: ${channel.name}`);
+    channel ? console.log(`Channel: target acquired: ${channel.name}`) : console.error("WARNING: selected channel is missing! Member list method will be skipped.");
+
+    // Dictionary info
+    const dictionary = (Array.from(new Set(config.dictionary.toLowerCase()))).sort();  //deduplication
+    console.log("Using dictionary:", dictionary.join(''));
 
     // Initiating progress loop, useful when using other methods taking time
     const loading = ora("Starting!").start();
@@ -95,7 +95,7 @@ client.on("ready", async () => {
         await guild.members.fetchBruteforce({
             delay: config.delay,
             limit: 100,  //max limit is 100 at once
-            dictionary: Array.from(new Set(config.dictionary.toLowerCase())) //deduplication
+            dictionary: dictionary
         });
         clearInterval(secondStage);
     }
@@ -117,24 +117,12 @@ client.on("ready", async () => {
     loading.prefixText = "";
     loading.succeed(`Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`);
 
-    // Generating text output
-    const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "avatar_url\n"];
-    let data = header.join(config.spacing);
+    await saveAndExit(client, config, guild);
+});
 
-    data += guild.members.cache.map(member => formatUserData(member, config.spacing, config.dateFormat)).join("\n");
-
-    // Save to file
-    const filename = `data-${Date.now()}.txt`;
-    try {
-        fs.writeFileSync(filename, data);
-        console.log(`Saved data to ${filename}!`);
-    } catch (e) {
-        console.error(e);
-    } finally {
-        console.log("OSINTCord says goodbye!");
-        client.destroy();
-        process.exit(0);
-    }
+process.on("SIGINT", async () => {
+    console.log("\nStopping!");
+    await saveAndExit(client, config, guild);
 });
 
 client.login(config.token);

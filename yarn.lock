@@ -192,8 +192,8 @@ discord-api-types@^0.37.20, discord-api-types@^0.37.31:
   integrity sha512-iyKZ/82k7FX3lcmHiAvvWu5TmyfVo78RtghBV/YsehK6CID83k5SI03DKKopBcln+TiEIYw5MGgq7SJXSpNzMg==
 
 "discord.js-selfbot-v13@https://github.com/MrBoombastic/discord.js-selfbot-v13#old-deps":
-  version "2.11.0"
-  resolved "https://github.com/MrBoombastic/discord.js-selfbot-v13#a270fadb3e14080d5cd28c1a016a59487c072a21"
+  version "2.11.1"
+  resolved "https://github.com/MrBoombastic/discord.js-selfbot-v13#d2894094c168f3183d4a8d8469b4ef08f588a80a"
   dependencies:
     "@aikochan2k6/qrcode-terminal" "^0.12.1"
     "@discordjs/builders" "^1.4.0"
@@ -318,7 +318,7 @@ onetime@^5.1.0:
   dependencies:
     mimic-fn "^2.1.0"
 
-ora@5.4.1:
+ora@~5.4.1:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/ora/-/ora-5.4.1.tgz#1b2678426af4ac4a509008e5e4ac9e9959db9e18"
   integrity sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ==

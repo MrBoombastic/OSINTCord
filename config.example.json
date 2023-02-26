@@ -1,7 +1,7 @@
 {
   "guildID": "guild ID",
   "channelID": "channel ID",
-  "spacing": "\t\t",
+  "spacing": "\t",
   "token": "user account token",
   "delay": 1000,
   "dictionary": " !\"#$%&'()*+,-./0123456789:;<=>?@[]^_`abcdefghijklmnopqrstuvwxyz{|}~",
