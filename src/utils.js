@@ -23,23 +23,25 @@ module.exports = {
         ora.text = `Fetching members... ${guild.members.cache.size}/${guild.memberCount} => ${Math.floor(guild.members.cache.size / guild.memberCount * 100)}%`;
     },
 
-    saveAndExit: async function (config, guild) {
-        // Generating text output
-        const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "avatar_url\n"];
-        let data = header.join(config.spacing);
+    saveAndExit: async function (client, config, guild) {
+        if (guild) {
+            // Generating text output
+            const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "avatar_url\n"];
+            let data = header.join(config.spacing);
 
-        data += guild.members.cache.map(member => module.exports.formatUserData(member, config.spacing, config.dateFormat)).join("\n");
+            data += guild.members.cache.map(member => module.exports.formatUserData(member, config.spacing, config.dateFormat)).join("\n");
 
-        // Save to file
-        const filename = `data-${Date.now()}.txt`;
-        try {
-            fs.writeFileSync(filename, data);
-            console.log(`Saved data to ${filename}!`);
-        } catch (e) {
-            console.error(e);
-        } finally {
-            console.log("OSINTCord says goodbye!");
-            process.exit(0);
+            // Save to file
+            const filename = `data-${Date.now()}.txt`;
+            try {
+                fs.writeFileSync(filename, data);
+                console.log(`Saved data to ${filename}!`);
+            } catch (e) {
+                console.error(e);
+            }
         }
+        console.log("OSINTCord says goodbye!");
+        client.destroy();
+        process.exit(0);
     }
 };

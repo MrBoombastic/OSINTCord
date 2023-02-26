@@ -70,6 +70,10 @@ client.on("ready", async () => {
     const channel = await guild.channels.cache.get(config.channelID);
     channel ? console.log(`Channel: target acquired: ${channel.name}`) : console.error("WARNING: selected channel is missing! Member list method will be skipped.");
 
+    // Dictionary info
+    const dictionary = (Array.from(new Set(config.dictionary.toLowerCase()))).sort();  //deduplication
+    console.log("Using dictionary:", dictionary.join(''));
+
     // Initiating progress loop, useful when using other methods taking time
     const loading = ora("Starting!").start();
 
@@ -91,7 +95,7 @@ client.on("ready", async () => {
         await guild.members.fetchBruteforce({
             delay: config.delay,
             limit: 100,  //max limit is 100 at once
-            dictionary: Array.from(new Set(config.dictionary.toLowerCase())) //deduplication
+            dictionary: dictionary
         });
         clearInterval(secondStage);
     }
@@ -113,12 +117,12 @@ client.on("ready", async () => {
     loading.prefixText = "";
     loading.succeed(`Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`);
 
-    await saveAndExit(config, guild);
+    await saveAndExit(client, config, guild);
 });
 
 process.on("SIGINT", async () => {
     console.log("\nStopping!");
-    await saveAndExit(config, guild);
+    await saveAndExit(client, config, guild);
 });
 
 client.login(config.token);
