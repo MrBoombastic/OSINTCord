@@ -23,7 +23,9 @@
   "bin": "src/index.js",
   "pkg": {
     "targets": [
-      "node18"
+      "linux-x64",
+      "macos-x64",
+      "win-x64"
     ],
     "outputPath": "dist",
     "assets": [
