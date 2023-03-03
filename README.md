@@ -1,13 +1,7 @@
-```
- ██████╗ ███████╗██╗███╗   ██╗████████╗ ██████╗ ██████╗ ██████╗ ██████╗ 
-██╔═══██╗██╔════╝██║████╗  ██║╚══██╔══╝██╔════╝██╔═══██╗██╔══██╗██╔══██╗
-██║   ██║███████╗██║██╔██╗ ██║   ██║   ██║     ██║   ██║██████╔╝██║  ██║
-██║   ██║╚════██║██║██║╚██╗██║   ██║   ██║     ██║   ██║██╔══██╗██║  ██║
-╚██████╔╝███████║██║██║ ╚████║   ██║   ╚██████╗╚██████╔╝██║  ██║██████╔╝
- ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
- 
- Just get data of (nearly) all of Discord guild members.
-```
+![img.png](img.png)
+[![CodeFactor](https://www.codefactor.io/repository/github/mrboombastic/osintcord/badge)](https://www.codefactor.io/repository/github/mrboombastic/osintcord)
+
+Just get data of (nearly) all of Discord guild members.
 
 ## Warning:
 
@@ -24,10 +18,10 @@ Using this on a user account is prohibited by the Discord TOS and can lead to th
   - Run the binary.
 - By using source code:
   - Clone this repository.
-  - Make sure that you have Node.JS v16+ installed.
-  - Install dependencies by `yarn`.
+  - Make sure that you have Node.JS v18 installed.
+  - Install dependencies by using `yarn`.
   - Fill in the `config.json` file and place it in `src` directory.
-  - Run `node src/index.js`.
+  - Run `npm start`.
 
 ## Options:
 
@@ -39,9 +33,9 @@ You can use some default options from [config.example.json](config.example.json)
 - `token`: Your Discord account token.
 - `delay`: Delay between *some* requests.
 - `dictionary`: Characters used by the bruteforce method. Case-insensitive, duplicates are ignored.
-- `dateFormat`: format of the parsed date (refer to the [Day.js manual](https://day.js.org/docs/en/display/format))
+- `dateFormat`: format of the parsed date (refer to the [Day.js manual](https://day.js.org/docs/en/display/format)).
 - `dateLocale`: locale used in the parsed
-  date ([list of supported locales](https://github.com/iamkun/dayjs/tree/dev/src/locale))
+  date ([list of supported locales](https://github.com/iamkun/dayjs/tree/dev/src/locale)).
 
 ## FAQ:
 
