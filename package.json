@@ -32,6 +32,6 @@
   "dependencies": {
     "dayjs": "^1.11.7",
     "discord.js-selfbot-v13": "https://github.com/MrBoombastic/discord.js-selfbot-v13#old-deps",
-    "ora": "~5.4.1"
+    "ora": "~6.1.2"
   }
 }
