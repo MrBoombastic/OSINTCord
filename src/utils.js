@@ -1,4 +1,6 @@
 const fs = require("fs");
+const packagejson = require("../package.json");
+
 module.exports = {
     formatUserData: function (member, spacing, dateFormat) {
         const data = [member.id, member.user.tag, member?.nickname || "NULL", member.user?.avatar || "NULL", member.roles.cache.map(role => `${role.id} - ${role.name}`).join(", "),
@@ -18,8 +20,7 @@ module.exports = {
         return {ok: true};
     },
 
-    refreshLoading: function (ora, prefix, guild) {
-        ora.prefixText = prefix;
+    refreshLoading: function (ora, guild) {
         ora.text = `Fetching members... ${guild.members.cache.size}/${guild.memberCount} => ${Math.floor(guild.members.cache.size / guild.memberCount * 100)}%`;
     },
 
@@ -40,8 +41,17 @@ module.exports = {
                 console.error(e);
             }
         }
-        console.log("OSINTCord says goodbye!");
+        console.log("OSINTCord says goodbye.");
         client.destroy();
         process.exit(0);
-    }
+    },
+
+    art: `
+ ██████╗ ███████╗██╗███╗   ██╗████████╗ ██████╗ ██████╗ ██████╗ ██████╗ 
+██╔═══██╗██╔════╝██║████╗  ██║╚══██╔══╝██╔════╝██╔═══██╗██╔══██╗██╔══██╗
+██║   ██║███████╗██║██╔██╗ ██║   ██║   ██║     ██║   ██║██████╔╝██║  ██║
+██║   ██║╚════██║██║██║╚██╗██║   ██║   ██║     ██║   ██║██╔══██╗██║  ██║
+╚██████╔╝███████║██║██║ ╚████║   ██║   ╚██████╗╚██████╔╝██║  ██║██████╔╝
+ ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝     v${packagejson.version}
+`
 };
