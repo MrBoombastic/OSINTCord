@@ -22,11 +22,6 @@
   },
   "bin": "src/index.js",
   "pkg": {
-    "targets": [
-      "linux-x64",
-      "macos-x64",
-      "win-x64"
-    ],
     "outputPath": "dist",
     "assets": [
       "node_modules/vm2/**/*",
