@@ -47,6 +47,7 @@ module.exports = {
         }, 500);
         for (let index = 0; index <= guild.memberCount; index += 100) {
             await guild.members.fetchMemberList(config.channelID, index, index !== 100).catch(() => false);
+            if (guild.members.cache.size === guild.memberCount) break;
             await client.sleep(config.delay);
         }
         clearInterval(stage);
