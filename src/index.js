@@ -8,8 +8,7 @@ const {bruteforce, perms, overlap} = require("./steps.js");
 
 // Setting up client
 const client = new Client({
-    checkUpdate: false,
-    partials: ["GUILD_MEMBER"]
+    checkUpdate: false, partials: ["GUILD_MEMBER"]
 });
 
 // Config and guild are stored here
@@ -50,18 +49,20 @@ client.on("ready", async () => {
     // Getting target
     guild = await client.guilds.cache.get(config.guildID);
     if (!guild?.available) {
-        console.error("ERROR: selected guild is not available!\nAvailable guilds:", client.guilds.cache.map(x => x.name).join(", "));
+        console.error("ERROR: selected guild is not available!\nAvailable guilds:", client.guilds.cache.map(x => `${x.name} (${x.id})`).join(", "));
         process.exit(1);
     }
     const channel = await guild.channels.cache.get(config.channelID);
-    if (!channel) console.warn("WARNING: selected channel is missing! 'Member list' method will be skipped.");
+    if (!channel) {
+        console.warn("WARNING: selected channel is missing! 'Member list' method will be skipped\nAvailable channels: ", guild.channels.cache.map(x => `${x.name} (${x.id})`).join(", "));
+    }
 
-    console.log(`Target acquired: ${guild.name} (${channel.name || "NO CHANNEL"})`);
+    console.log(`Target acquired: ${guild.name} (${channel?.name || "NO CHANNEL"})`);
 
     // Fetching!
-    await perms(guild); // Method 1. - fetching with perms
-    if (guild.members.cache.size !== guild.memberCount) await bruteforce(guild, config); // Method 2. - brute-force fetching
-    if (channel && guild.members.cache.size !== guild.memberCount) await overlap(guild, config, client); // Method 3. - overlap member list fetching
+    await perms(guild); // Method 1 - fetching with perms
+    if (channel) await overlap(guild, config, client); // Method 2 - overlap member list fetching
+    if ((guild.members.cache.size < guild.memberCount) && (guild.members.cache.size !== guild.memberCount)) await bruteforce(guild, config); // Method 3 - brute-force fetching
 
     // Done!
     console.log(`Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`);

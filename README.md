@@ -1,4 +1,4 @@
-![img.png](img.png)
+![Logo.png](img.png)
 [![CodeFactor](https://www.codefactor.io/repository/github/mrboombastic/osintcord/badge)](https://www.codefactor.io/repository/github/mrboombastic/osintcord)
 
 Just get data of (nearly) all of Discord guild members.

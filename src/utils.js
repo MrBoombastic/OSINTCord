@@ -3,12 +3,14 @@ const packagejson = require("../package.json");
 
 module.exports = {
     formatUserData: function (member, spacing, dateFormat) {
-        const data = [member.id, member.user.tag, member?.nickname || "NULL", member.user?.avatar || "NULL", member.roles.cache.map(role => `${role.id} - ${role.name}`).join(", "),
-            dayjs(member.user.createdAt).format(dateFormat), dayjs(member.joinedAt).format(dateFormat), member?.presence?.activities?.map(activity => activity?.name).join(", ") || "NULL",
-            member?.presence?.status.toUpperCase(), member.user?.displayAvatarURL({
-                size: 1024,
-                dynamic: true
-            })];
+        const avatarURL = member.user?.displayAvatarURL({
+            size: 1024,
+            dynamic: true
+        });
+        const presenceJSON = {activities: member?.presence?.activities, clientStatus: member?.presence.clientStatus};
+        const data = [member.id, member.user.tag, member?.nickname || "", avatarURL || "", member.roles.cache.map(role => `${role.id} - ${role.name}`).join(", "),
+            dayjs(member.user.createdAt).format(dateFormat), dayjs(member.joinedAt).format(dateFormat), member?.presence?.status !== "offline" ? JSON.stringify(presenceJSON) : "",
+            member?.presence?.status.toUpperCase(), member?.user?.flags?.toArray()?.join(", ")];
         return data.join(spacing);
     },
 
@@ -27,7 +29,7 @@ module.exports = {
     saveAndExit: async function (client, config, guild) {
         if (guild) {
             // Generating text output
-            const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "avatar_url\n"];
+            const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "flags\n"];
             let data = header.join(config.spacing);
 
             data += guild.members.cache.map(member => module.exports.formatUserData(member, config.spacing, config.dateFormat)).join("\n");
