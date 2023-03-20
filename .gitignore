@@ -1,5 +1,4 @@
 # Config
-src/config*.json
 src/data-*
 
 # IDE

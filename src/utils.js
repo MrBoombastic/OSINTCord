@@ -1,4 +1,6 @@
 const fs = require("fs");
+const request = require("request");
+const path = require("path");
 const packagejson = require("../package.json");
 
 module.exports = {
@@ -14,10 +16,20 @@ module.exports = {
         return data.join(spacing);
     },
 
-    checkConfig: function (config) {
-        const props = ["guildID", "channelID", "spacing", "token", "delay", "dictionary"];
+    checkConfig: function () {
+        let props = [];
+        switch (process.env.MODE) {
+            case "WATCHDOG":
+                props = ["GUILD_ID", "TOKEN"];
+                break;
+            case "MEMBERS":
+                props = ["GUILD_ID", "CHANNEL_ID", "SPACING", "TOKEN", "DELAY", "DICTIONARY", "DATE_FORMAT", "DATE_LOCALE"];
+                break;
+            default:
+                return {ok: false, reason: "MODE"};
+        }
         for (let prop of props) {
-            if (!(prop in config)) return {ok: false, prop};
+            if (!process.env[prop]) return {ok: false, reason: prop};
         }
         return {ok: true};
     },
@@ -26,13 +38,13 @@ module.exports = {
         ora.text = `Fetching members... ${guild.members.cache.size}/${guild.memberCount} => ${Math.floor(guild.members.cache.size / guild.memberCount * 100)}%`;
     },
 
-    saveAndExit: async function (client, config, guild) {
+    saveAndExit: async function (client, guild) {
         if (guild) {
             // Generating text output
             const header = ["id", "username#discriminator", "nickname", "avatar", "roles", "created_at", "joined_at", "activity", "status", "flags\n"];
-            let data = header.join(config.spacing);
+            let data = header.join(process.env.SPACING);
 
-            data += guild.members.cache.map(member => module.exports.formatUserData(member, config.spacing, config.dateFormat)).join("\n");
+            data += guild.members.cache.map(member => module.exports.formatUserData(member, process.env.SPACING, process.env.DATE_FORMAT)).join("\n");
 
             // Save to file
             const filename = `data-${Date.now()}.txt`;
@@ -47,6 +59,27 @@ module.exports = {
         client.destroy();
         process.exit(0);
     },
+    downloadFile: function (url) {
+        const mediaDir = './media';
+        if (!fs.existsSync(mediaDir)) {
+            fs.mkdirSync(mediaDir);
+        }
+        let fileName = url.replace("https://media.discordapp.net/attachments/", "");
+        fileName = fileName.replaceAll("/", "-");
+        const filePath = path.join(mediaDir, fileName);
+
+        request(url)
+            .on('error', (err) => {
+                console.error(`Error downloading file: ${err.message}`);
+            })
+            .pipe(fs.createWriteStream(filePath))
+            .on('error', (err) => {
+                console.error(`Error saving file: ${err.message}`);
+            })
+            .on('finish', () => {
+                console.log(`File saved to ${filePath}`);
+            });
+    },
 
     art: `
  ██████╗ ███████╗██╗███╗   ██╗████████╗ ██████╗ ██████╗ ██████╗ ██████╗ 
@@ -55,5 +88,5 @@ module.exports = {
 ██║   ██║╚════██║██║██║╚██╗██║   ██║   ██║     ██║   ██║██╔══██╗██║  ██║
 ╚██████╔╝███████║██║██║ ╚████║   ██║   ╚██████╗╚██████╔╝██║  ██║██████╔╝
  ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝     v${packagejson.version}
-`
+=============\t\t\t$MODE MODE\t\t\t=============`
 };

@@ -1,6 +1,6 @@
 {
   "name": "osintcord",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Get data of (nearly) all of Discord guild members",
   "main": "src/index.js",
   "scripts": {
@@ -36,6 +36,9 @@
   "dependencies": {
     "dayjs": "^1.11.7",
     "discord.js-selfbot-v13": "https://github.com/MrBoombastic/discord.js-selfbot-v13#old-deps",
-    "ora": "~5.4.1"
+    "dotenv": "^16.0.3",
+    "log4js": "^6.9.1",
+    "ora": "~5.4.1",
+    "request": "^2.88.2"
   }
 }
