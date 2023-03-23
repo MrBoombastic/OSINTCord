@@ -28,6 +28,7 @@
   "pkg": {
     "outputPath": "dist",
     "assets": [
+      "src/**/*",
       "node_modules/vm2/**/*",
       "node_modules/dayjs/locale/*"
     ]

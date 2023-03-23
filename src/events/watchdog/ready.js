@@ -1,8 +1,7 @@
 const log4js = require("log4js");
-const {art} = require("../../utils");
+const {welcome} = require("../../utils");
 module.exports = async (client) => {
-    console.log(art.replace("$MODE", process.env.MODE));
-    console.log(`Logged in as ${client.user.tag} (${client.user?.emailAddress || "NO EMAIL"})`);
+    welcome(client);
 
     // Getting target
     const info = process.env.GUILD_ID.toLowerCase() === "all" ? "ALL GUILDS" : await client.guilds.cache.get(process.env.GUILD_ID).name;
@@ -10,7 +9,13 @@ module.exports = async (client) => {
 
     // Set up message logging
     log4js.configure({
-        appenders: {watchdog: {type: "file", filename: `${process.env.GUILD_ID}.log`}},
+        appenders: {
+            watchdog: {
+                type: "file",
+                layout: {type: "pattern", pattern: "[%d] %m%n"},
+                filename: `${process.env.GUILD_ID}.log`
+            }
+        },
         categories: {default: {appenders: ["watchdog"], level: "info"}},
     });
 

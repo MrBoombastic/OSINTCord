@@ -2,7 +2,8 @@
 const {Client} = require("discord.js-selfbot-v13");
 global.dayjs = require("dayjs");
 dayjs.extend(require("dayjs/plugin/localizedFormat"));
-const {saveAndExit, checkConfig} = require("./utils.js");
+const {checkConfig, exit} = require("./utils.js");
+const {saveMembers} = require("./utils");
 require('dotenv').config();
 
 
@@ -11,12 +12,9 @@ const client = new Client({
     checkUpdate: false, partials: ["GUILD_MEMBER"]
 });
 
-// Config and guild are stored here
-let guild;
-
 // Config file validation
 const configStatus = checkConfig();
-if (!configStatus.ok) {
+if (!configStatus.success) {
     console.error(`ERROR: wrong config! Reason: ${configStatus.reason}`);
     process.exit(1);
 }
@@ -30,24 +28,19 @@ try {
     dayjs.locale("en");
 }
 
-// Just informational things
-client.on("rateLimit", async (data) => {
-    console.log(data);
-});
-
-// For some reason, I can't get vercel/pkg to work. Using this workaround instead.
-if (process.env.MODE === "WATCHDOG") {
-    client.on("messageDelete", require("./events/watchdog/messageDelete.js").bind(null, client));
-    client.on("messageUpdate", require("./events/watchdog/messageUpdate.js").bind(null, client));
-    client.on("ready", require("./events/watchdog/ready.js").bind(null, client));
-} else if (process.env.MODE === "MEMBERS") {
-    client.on("ready", require("./events/members/ready.js").bind(null, client));
+const events = {
+    watchdog: ["messageDelete", "messageUpdate", "ready"],
+    members: ["ready"]
+};
+for (const file of events[process.env.MODE.toLowerCase()]) {
+    const event = require(`./events/${process.env.MODE.toLowerCase()}/${file}`);
+    client.on(file, event.bind(null, client));
 }
 
-
 process.on("SIGINT", async () => {
-    console.log("\nStopped upon user's request!");
-    await saveAndExit(client, guild);
+    console.log("\nStopping at user's request!");
+    if (process.env.MODE === "MEMBERS") saveMembers(client, client.guilds.cache.get(process.env.GUILD_ID));
+    exit(client);
 });
 
 client.login(process.env.TOKEN);
