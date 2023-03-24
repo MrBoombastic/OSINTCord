@@ -1,4 +1,4 @@
-const {welcome, exit} = require("../../utils");
+const {welcome, exit, saveMembers} = require("../../utils");
 const {perms, overlap, bruteforce} = require("../../steps");
 
 module.exports = async (client) => {
@@ -24,5 +24,6 @@ module.exports = async (client) => {
 
     // Done!
     console.log(`Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`);
+    saveMembers(client, guild);
     exit(client);
 };

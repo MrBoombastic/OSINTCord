@@ -2,6 +2,7 @@ const {downloadFile} = require("../../utils");
 
 module.exports = async (client, oldMsg, newMsg) => {
     if (oldMsg.guildId === process.env.GUILD_ID || process.env.GUILD_ID.toLowerCase() === "all") {
+        if (oldMsg.embeds.length === 0 && newMsg.embeds.length > 0) return; //ignoring generating thumbnails for images
         let info = `[EDITED MESSAGE] Guild: ${oldMsg.guild.name} Channel: ${oldMsg.channel.name} Author: ${oldMsg.author?.tag} Bot: ${oldMsg.author?.bot}
 OLD CONTENT: ${oldMsg.content}
 NEW CONTENT: ${newMsg.content}`;
@@ -13,6 +14,6 @@ NEW CONTENT: ${newMsg.content}`;
                 downloadFile(x.proxyURL);
             });
         }
-        client.logger.info(info);
+        client.logger.log(info);
     }
 };

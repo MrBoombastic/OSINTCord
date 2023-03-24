@@ -49,7 +49,7 @@ module.exports = {
         data += guild.members.cache.map(member => module.exports.formatUserData(member, process.env.SPACING, process.env.DATE_FORMAT)).join("\n");
 
         // Save to file
-        const filename = `members-${Date.now()}.txt`;
+        const filename = `logs/members-${guild.id}-${Date.now()}.txt`;
         try {
             fs.writeFileSync(filename, data);
             console.log(`Saved data to ${filename}!`);

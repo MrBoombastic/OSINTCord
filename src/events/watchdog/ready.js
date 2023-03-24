@@ -13,7 +13,7 @@ module.exports = async (client) => {
             watchdog: {
                 type: "file",
                 layout: {type: "pattern", pattern: "[%d] %m%n"},
-                filename: `${process.env.GUILD_ID}.log`
+                filename: `logs/watchdog-${process.env.GUILD_ID}.log`
             }
         },
         categories: {default: {appenders: ["watchdog"], level: "info"}},

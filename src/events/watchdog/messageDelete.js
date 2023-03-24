@@ -9,6 +9,6 @@ module.exports = async (client, message) => {
                 downloadFile(x.proxyURL);
             });
         }
-        client.logger.info(info);
+        client.logger.log(info);
     }
 };

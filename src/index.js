@@ -2,14 +2,13 @@
 const {Client} = require("discord.js-selfbot-v13");
 global.dayjs = require("dayjs");
 dayjs.extend(require("dayjs/plugin/localizedFormat"));
-const {checkConfig, exit} = require("./utils.js");
-const {saveMembers} = require("./utils");
+const {checkConfig, exit, saveMembers} = require("./utils.js");
 require('dotenv').config();
 
 
 // Setting up client
 const client = new Client({
-    checkUpdate: false, partials: ["GUILD_MEMBER"]
+    checkUpdate: false,
 });
 
 // Config file validation
@@ -39,7 +38,7 @@ for (const file of events[process.env.MODE.toLowerCase()]) {
 
 process.on("SIGINT", async () => {
     console.log("\nStopping at user's request!");
-    if (process.env.MODE === "MEMBERS") saveMembers(client, client.guilds.cache.get(process.env.GUILD_ID));
+    if (process.env.MODE.toLowerCase() === "members") saveMembers(client, client.guilds.cache.get(process.env.GUILD_ID));
     exit(client);
 });
 
