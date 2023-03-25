@@ -1,78 +1,45 @@
 // Including libraries
-const fs = require("fs");
 const {Client} = require("discord.js-selfbot-v13");
 global.dayjs = require("dayjs");
 dayjs.extend(require("dayjs/plugin/localizedFormat"));
-const {saveAndExit, checkConfig, art} = require("./utils.js");
-const {bruteforce, perms, overlap} = require("./steps.js");
+const {checkConfig, exit, saveMembers} = require("./utils.js");
+require('dotenv').config();
+
 
 // Setting up client
 const client = new Client({
-    checkUpdate: false, partials: ["GUILD_MEMBER"]
+    checkUpdate: false,
 });
 
-// Config and guild are stored here
-let config, guild;
-
 // Config file validation
-try {
-    config = JSON.parse(fs.readFileSync("./config.json"));
-} catch (e) {
-    console.error("ERROR: missing config file!");
-    process.exit(1);
-}
-const configStatus = checkConfig(config);
-if (!configStatus.ok) {
-    console.error(`ERROR: missing '${configStatus.prop}' in config file!`);
+const configStatus = checkConfig();
+if (!configStatus.success) {
+    console.error(`ERROR: wrong config! Reason: ${configStatus.reason}`);
     process.exit(1);
 }
 
 // Preparing date formatting
 try {
-    require(`dayjs/locale/${config.dateLocale}`);
-    dayjs.locale(config.dateLocale);
+    require(`dayjs/locale/${process.env.DATE_LOCALE}`);
+    dayjs.locale(process.env.DATE_LOCALE);
 } catch (e) {
-    console.warn(`WARNING: locale '${config.dateLocale}' not found. Using 'en' as fallback.`);
+    console.warn(`WARNING: locale '${process.env.DATE_LOCALE}' not found. Using 'en' as fallback.`);
     dayjs.locale("en");
 }
 
-// Just informational things
-client.on("rateLimit", async (data) => {
-    console.log(data);
-});
-
-// When bot is ready
-client.on("ready", async () => {
-    console.log(art);
-    console.log(`Logged in as ${client.user.tag} (${client.user?.emailAddress || "NO EMAIL"})`);
-
-    // Getting target
-    guild = await client.guilds.cache.get(config.guildID);
-    if (!guild?.available) {
-        console.error("ERROR: selected guild is not available!\nAvailable guilds:", client.guilds.cache.map(x => `${x.name} (${x.id})`).join(", "));
-        process.exit(1);
-    }
-    const channel = await guild.channels.cache.get(config.channelID);
-    if (!channel) {
-        console.warn("WARNING: selected channel is missing! 'Member list' method will be skipped\nAvailable channels: ", guild.channels.cache.map(x => `${x.name} (${x.id})`).join(", "));
-    }
-
-    console.log(`Target acquired: ${guild.name} (${channel?.name || "NO CHANNEL"})`);
-
-    // Fetching!
-    await perms(guild); // Method 1 - fetching with perms
-    if (channel) await overlap(guild, config, client); // Method 2 - overlap member list fetching
-    if ((guild.members.cache.size < guild.memberCount) && (guild.members.cache.size !== guild.memberCount)) await bruteforce(guild, config); // Method 3 - brute-force fetching
-
-    // Done!
-    console.log(`Fetching done! Found ${guild.members.cache.size}/${guild.memberCount} => ${guild.members.cache.size / guild.memberCount * 100}% members.`);
-
-    await saveAndExit(client, config, guild);
-});
+const events = {
+    watchdog: ["messageDelete", "messageUpdate", "ready"],
+    members: ["ready"]
+};
+for (const file of events[process.env.MODE.toLowerCase()]) {
+    const event = require(`./events/${process.env.MODE.toLowerCase()}/${file}`);
+    client.on(file, event.bind(null, client));
+}
 
 process.on("SIGINT", async () => {
-    console.log("\nStopped upon user's request!");
-    await saveAndExit(client, config, guild);
+    console.log("\nStopping at user's request!");
+    if (process.env.MODE.toLowerCase() === "members") saveMembers(client, client.guilds.cache.get(process.env.GUILD_ID));
+    exit(client);
 });
 
-client.login(config.token);
+client.login(process.env.TOKEN);

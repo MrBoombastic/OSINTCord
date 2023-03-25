@@ -15,9 +15,9 @@ module.exports = {
         progressbar.stop();
     },
 
-    bruteforce: async (guild, config) => {
+    bruteforce: async (guild) => {
         // Dictionary info
-        const dictionary = (Array.from(new Set(config.dictionary.toLowerCase()))).sort();  //deduplication
+        const dictionary = (Array.from(new Set(process.env.DICTIONARY.toLowerCase()))).sort();  //deduplication
         console.log("Using dictionary:", dictionary.join(''));
 
         const progressbar = ora({text: "Starting 'brute-force' method!", prefixText: "[BRUTE-FORCE]"}).start();
@@ -29,14 +29,14 @@ module.exports = {
             refreshLoading(progressbar, guild);
         }, 500);
         await guild.members.fetchBruteforce({
-            delay: config.delay, limit: 100,  //max limit is 100 at once
+            delay: parseInt(process.env.DELAY), limit: 100,  //max limit is 100 at once
             dictionary: dictionary
         });
         clearInterval(stage);
         progressbar.stop();
     },
 
-    overlap: async (guild, config, client) => {
+    overlap: async (guild, client) => {
         const progressbar = ora({
             text: "Starting 'overlap member list' method!", prefixText: "[OVERLAP MEMBER LIST]"
         }).start();
@@ -46,9 +46,9 @@ module.exports = {
             refreshLoading(progressbar, guild);
         }, 500);
         for (let index = 0; index <= guild.memberCount; index += 100) {
-            await guild.members.fetchMemberList(config.channelID, index, index !== 100).catch(() => false);
-            if (guild.members.cache.size === guild.memberCount) break;
-            await client.sleep(config.delay);
+            await guild.members.fetchMemberList(process.env.CHANNEL_ID, index, index !== 100).catch(() => false);
+            if (guild.members.cache.size >= guild.memberCount) break;
+            await client.sleep(parseInt(process.env.DELAY));
         }
         clearInterval(stage);
         progressbar.stop();
