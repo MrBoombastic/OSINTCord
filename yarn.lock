@@ -268,8 +268,9 @@ discord-api-types@^0.37.20, discord-api-types@^0.37.31, discord-api-types@^0.37.
   integrity sha512-iyKZ/82k7FX3lcmHiAvvWu5TmyfVo78RtghBV/YsehK6CID83k5SI03DKKopBcln+TiEIYw5MGgq7SJXSpNzMg==
 
 "discord.js-selfbot-v13@https://github.com/MrBoombastic/discord.js-selfbot-v13#old-deps":
-  version "2.11.5"
-  resolved "https://github.com/MrBoombastic/discord.js-selfbot-v13#bddf0f872f262fc6fd882cd17d9427d059d39f8a"
+  version "2.12.0"
+  uid "2d9544049ecf8eacf3f36f7846afd43e3b19b1ce"
+  resolved "https://github.com/MrBoombastic/discord.js-selfbot-v13#2d9544049ecf8eacf3f36f7846afd43e3b19b1ce"
   dependencies:
     "@aikochan2k6/qrcode-terminal" "^0.12.1"
     "@discordjs/builders" "^1.4.0"
