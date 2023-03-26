@@ -1,3 +1,4 @@
+const fse = require("fs-extra"); // typings are broken, so I'm importing fs too :(
 const fs = require("fs");
 const request = require("request");
 const path = require("path");
@@ -51,7 +52,7 @@ module.exports = {
         // Save to file
         const filename = `logs/members-${guild.id}-${Date.now()}.txt`;
         try {
-            fs.writeFileSync(filename, data);
+            fse.outputFileSync(filename, data);
             console.log(`Saved data to ${filename}!`);
         } catch (e) {
             console.error(e);
