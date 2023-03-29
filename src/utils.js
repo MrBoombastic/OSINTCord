@@ -1,8 +1,7 @@
-const fse = require("fs-extra"); // typings are broken, so I'm importing fs too :(
 const fs = require("fs");
-const request = require("request");
 const path = require("path");
 const packagejson = require("../package.json");
+const fetch = require("node-fetch");
 
 module.exports = {
     formatUserData: function (member, spacing, dateFormat) {
@@ -50,9 +49,11 @@ module.exports = {
         data += guild.members.cache.map(member => module.exports.formatUserData(member, process.env.SPACING, process.env.DATE_FORMAT)).join("\n");
 
         // Save to file
-        const filename = `logs/members-${guild.id}-${Date.now()}.txt`;
+        const logsDir = './logs';
+        const filename = `${logsDir}/members-${guild.id}-${Date.now()}.txt`;
         try {
-            fse.outputFileSync(filename, data);
+            if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir);
+            fs.writeFileSync(filename, data);
             console.log(`Saved data to ${filename}!`);
         } catch (e) {
             console.error(e);
@@ -63,26 +64,20 @@ module.exports = {
         client.destroy();
         process.exit(0);
     },
-    downloadFile: function (url) {
+    downloadFile: async function (url) {
         const mediaDir = './media';
-        if (!fs.existsSync(mediaDir)) {
-            fs.mkdirSync(mediaDir);
-        }
+        if (!fs.existsSync(mediaDir)) fs.mkdirSync(mediaDir);
+
         let fileName = url.replace("https://media.discordapp.net/attachments/", "");
         fileName = fileName.replaceAll("/", "-");
         const filePath = path.join(mediaDir, fileName);
 
-        request(url)
-            .on('error', (err) => {
-                console.error(`Error downloading file: ${err.message}`);
-            })
-            .pipe(fs.createWriteStream(filePath))
-            .on('error', (err) => {
-                console.error(`Error saving file: ${err.message}`);
-            })
-            .on('finish', () => {
-                console.log(`File saved to ${filePath}`);
-            });
+        const res = await fetch(url);
+        const data = await res.buffer();
+        if (res.ok) {
+            fs.writeFileSync(filePath, data);
+            console.log(`File saved to ${filePath}`);
+        } else console.error(`Failed to download deleted media (${url}): ${res.status} ${res.statusText}`);
     },
 
     art: `
