@@ -5,7 +5,7 @@ Just get data of (nearly) all of Discord guild members. Or track deleted and edi
 
 ## Warning:
 
-This app uses [fork of discord.js-selfbot-v13](https://github.com/MrBoombastic/discord.js-selfbot-v13/tree/old-deps).
+This app uses [fork of discord.js-selfbot-v13](https://github.com/MrBoombastic/discord.js-selfbot-v13).
 
 "I don't take any responsibility for blocked Discord accounts that used this module.
 Using this on a user account is prohibited by the Discord TOS and can lead to the account block."
