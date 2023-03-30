@@ -36,7 +36,7 @@
   "homepage": "https://github.com/MrBoombastic/OSINTCord#readme",
   "dependencies": {
     "dayjs": "^1.11.7",
-    "node-fetch": "^2.6.9",
+    "node-fetch": "^3.3.1",
     "discord.js-selfbot-v13": "https://github.com/MrBoombastic/discord.js-selfbot-v13#1.5.3",
     "dotenv": "^16.0.3",
     "log4js": "^6.9.1",
