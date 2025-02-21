@@ -3,12 +3,9 @@
 
 Just get data of (nearly) all of Discord guild members. Or track deleted and edited messages. Or why not both?
 
-## Warning:
-
-This app uses [fork of discord.js-selfbot-v13](https://github.com/MrBoombastic/discord.js-selfbot-v13).
-
+> [!WARNING]  
 "I don't take any responsibility for blocked Discord accounts that used this module.
-Using this on a user account is prohibited by the Discord TOS and can lead to the account block."
+> Using this on a user account is prohibited by the Discord TOS and can lead to the account block."
 
 ## Usage:
 
@@ -18,7 +15,7 @@ Using this on a user account is prohibited by the Discord TOS and can lead to th
   - Run the binary.
 - By using source code:
   - Clone this repository.
-  - Make sure that you have Node.JS v18 installed.
+  - Make sure that you have Node.js v18 installed.
   - Install dependencies by using `yarn`.
   - Fill in the `.env` file and place it in `src` directory.
   - Run `npm start`.
@@ -27,12 +24,12 @@ All results will be stored in the `logs` and `media` directories.
 
 ## Options:
 
-You can use some default options from the already provided [.env](.env) file.
+You can use some default options from the already provided [.env](.env.example) file.
 
 - When you want to dump guild members, set `MODE` to `MEMBERS` and set
   - `GUILD_ID`: The guild ID you want to get data from.
   - `CHANNEL_ID`: The channel ID, which also will be used to get data from.
-  - `SPACING`: Spacing between columns in output file.
+  - `SPACING`: Spacing between columns in an output file.
   - `TOKEN`: Your Discord account token.
   - `DELAY`: Delay between *some* requests.
   - `DICTIONARY`: Characters used by the bruteforce method. Case-insensitive, duplicates are ignored, sorted
@@ -52,4 +49,4 @@ You can use some default options from the already provided [.env](.env) file.
 
 ## Worth reading:
 
-- https://github.com/aiko-chan-ai/discord.js-selfbot-v13/blob/main/Document/FetchGuildMember.md
+- https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using/fetchingGuildMembers.md

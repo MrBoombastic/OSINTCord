@@ -7,9 +7,7 @@ require('dotenv').config();
 
 
 // Setting up client
-const client = new Client({
-    checkUpdate: false,
-});
+const client = new Client();
 
 // Config file validation
 const configStatus = checkConfig();

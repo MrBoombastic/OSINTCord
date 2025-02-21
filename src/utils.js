@@ -38,8 +38,8 @@ module.exports = {
         console.log(module.exports.art.replace("$MODE", process.env.MODE.toUpperCase()));
         console.log(`Logged in as ${client.user.tag} (${client.user?.emailAddress || "NO EMAIL"})`);
     },
-    refreshLoading: function (ora, guild) {
-        ora.text = `Fetching members... ${guild.members.cache.size}/${guild.memberCount} => ${Math.floor(guild.members.cache.size / guild.memberCount * 100)}%`;
+    refreshLoading: function (ora, guild, query) {
+        ora.text = `Fetching members... ${guild.members.cache.size}/${guild.memberCount} => ${Math.floor(guild.members.cache.size / guild.memberCount * 100)}% [query: ${query || ""}]`;
     },
     saveMembers: function (client, guild) {
         // Generating text output

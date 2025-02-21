@@ -1,56 +1,54 @@
 const {refreshLoading} = require("./utils");
 const ora = require("ora");
-module.exports = {
-    perms: async (guild) => {
-        const progressbar = ora({
-            text: "Starting 'fetching with perms' method!", prefixText: "[FETCH WITH PERMS]"
-        }).start();
-        refreshLoading(progressbar, guild);
-        const stage = setInterval(function () {
-            refreshLoading(progressbar, guild);
-        }, 500);
-        // In my fork, this only fetches members if user has at least one of these perms: KICK_MEMBERS, BAN_MEMBERS, MANAGE_ROLES
-        await guild.members.fetch();
-        clearInterval(stage);
-        progressbar.stop();
-    },
 
-    bruteforce: async (guild) => {
-        // Dictionary info
-        const dictionary = (Array.from(new Set(process.env.DICTIONARY.toLowerCase()))).sort();  //deduplication
-        console.log("Using dictionary:", dictionary.join(''));
 
+const bruteforce = async (guild) => {
+    // Dictionary info
+    const dictionary = (Array.from(new Set(process.env.DICTIONARY.toLowerCase()))).sort();  //deduplication
+    console.log("Using dictionary:", dictionary.join(''));
+
+    const delay = parseInt(process.env.DELAY);
+    if (delay < 500) console.warn(`WARN: Delay is less than 500ms, this may cause rate limits.`,);
+
+    // Get up to 10 000 members instantly
+    const prefetched = await guild.members.fetchByMemberSafety();
+    console.log(`[PREFETCH] Prefetched ${prefetched?.size} members from a total of ${guild.memberCount} members.`);
+
+    const limit = 100; // greater values change nothing
+
+    // if there are missing members, bruteforce by dictionary
+    if (prefetched?.size < guild.memberCount) {
+        console.log(`Still missing members, brute-forcing\n`);
+        // cache of members before next fetching
+        const idsBeforeSet = new Set(guild.members.cache.map(member => member.id));
         const progressbar = ora({text: "Starting 'brute-force' method!", prefixText: "[BRUTE-FORCE]"}).start();
-        // https://github.com/aiko-chan-ai/discord.js-selfbot-v13/blob/main/Document/FetchGuildMember.md
-        // Bruteforce dictionary (searching nicknames by characters)
-
-        refreshLoading(progressbar, guild);
-        const stage = setInterval(function () {
-            refreshLoading(progressbar, guild);
-        }, 500);
-        await guild.members.fetchBruteforce({
-            delay: parseInt(process.env.DELAY), limit: 100,  //max limit is 100 at once
-            dictionary: dictionary
-        });
-        clearInterval(stage);
-        progressbar.stop();
-    },
-
-    overlap: async (guild, client) => {
-        const progressbar = ora({
-            text: "Starting 'overlap member list' method!", prefixText: "[OVERLAP MEMBER LIST]"
-        }).start();
-        // Fetching members from sidebar, may fetch additional online members, if guild has > 1000
-        refreshLoading(progressbar, guild);
-        const stage = setInterval(function () {
-            refreshLoading(progressbar, guild);
-        }, 500);
-        for (let index = 0; index <= guild.memberCount; index += 100) {
-            await guild.members.fetchMemberList(process.env.CHANNEL_ID, index, index !== 100).catch(() => false);
-            if (guild.members.cache.size >= guild.memberCount) break;
-            await client.sleep(parseInt(process.env.DELAY));
+        // recursively search for members with the given dictionary
+        const fetchRec = async (query) => {
+            const req = await guild.members._fetchMany({query, limit});
+            // search may return duplicated members, we need to filter them (comparing with current cache)
+            const newMembers = req.filter(member => !idsBeforeSet.has(member.id));
+            // add new members to cache
+            newMembers.forEach(member => guild.members.cache.set(member.id, member));
+            // update idsBefore and cache
+            newMembers.forEach(member => {
+                guild.members.cache.set(member.id, member);
+                idsBeforeSet.add(member.id);
+            });
+            if (newMembers?.size === limit) {
+                for (const query2 of dictionary) {
+                    refreshLoading(progressbar, guild, query + query2);
+                    await guild.client.sleep(delay);
+                    await fetchRec(query + query2);
+                }
+            }
+        };
+        for (const query of dictionary) {
+            refreshLoading(progressbar, guild, query);
+            await guild.client.sleep(delay);
+            await fetchRec(query);
         }
-        clearInterval(stage);
         progressbar.stop();
     }
 };
+module.exports = {bruteforce};
+
