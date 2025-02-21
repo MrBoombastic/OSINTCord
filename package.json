@@ -1,14 +1,11 @@
 {
   "name": "osintcord",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "Get data of (nearly) all of Discord guild members",
   "main": "src/index.js",
   "scripts": {
     "start": "cd src && node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "pkgall": "pkg .",
-    "pkgwin": "pkg -t node18-win . --out-path dist/",
-    "pkgci": "pkg -C GZip ."
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -35,11 +32,11 @@
   },
   "homepage": "https://github.com/MrBoombastic/OSINTCord#readme",
   "dependencies": {
-    "dayjs": "^1.11.7",
-    "node-fetch": "^2.6.9",
-    "discord.js-selfbot-v13": "https://github.com/MrBoombastic/discord.js-selfbot-v13#1.5.3",
-    "dotenv": "^16.0.3",
+    "dayjs": "^1.11.10",
+    "discord.js-selfbot-v13": "^3.5.1",
+    "dotenv": "^16.3.1",
     "log4js": "^6.9.1",
+    "node-fetch": "^2.6.9",
     "ora": "~5.4.1"
   }
 }
