@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/MrBoombastic/OSINTCord#readme",
   "dependencies": {
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.13",
     "discord.js-selfbot-v13": "^3.6.0",
     "dotenv": "^16.3.1",
     "log4js": "^6.9.1",
