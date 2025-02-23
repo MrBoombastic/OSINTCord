@@ -34,7 +34,7 @@
   "dependencies": {
     "dayjs": "^1.11.10",
     "discord.js-selfbot-v13": "^3.6.0",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.7",
     "log4js": "^6.9.1",
     "node-fetch": "^3.3.2",
     "ora": "~5.4.1"
