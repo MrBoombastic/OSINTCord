@@ -8,8 +8,8 @@ Just get data of (nearly) all of Discord guild members. Or track deleted and edi
 > Using this on a user account is prohibited by the Discord TOS and can lead to the account block.
 
 > [!TIP]
-> If you are upgrading from the previous version, please make sure to update the dictionary in the`.env` file.
-> [Pomelo](https://discord.fandom.com/wiki/Pomelo) has changed rules for usernames.
+> If you are upgrading from the previous version, please make sure you update the dictionary in the`.env` file.
+> [Pomelo](https://discord.fandom.com/wiki/Pomelo) has changed the rules for usernames.
 
 ## Usage:
 
