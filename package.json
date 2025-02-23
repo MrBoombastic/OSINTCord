@@ -1,6 +1,6 @@
 {
   "name": "osintcord",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Get data of (nearly) all of Discord guild members",
   "main": "src/index.js",
   "scripts": {
@@ -18,18 +18,11 @@
   ],
   "author": "MrBoombastic",
   "license": "WTFPL",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/MrBoombastic/OSINTCord/issues"
   },
   "bin": "src/index.js",
-  "pkg": {
-    "outputPath": "dist",
-    "assets": [
-      "src/**/*",
-      "node_modules/vm2/**/*",
-      "node_modules/dayjs/locale/*"
-    ]
-  },
   "homepage": "https://github.com/MrBoombastic/OSINTCord#readme",
   "dependencies": {
     "dayjs": "^1.11.13",
@@ -37,6 +30,6 @@
     "dotenv": "^16.4.7",
     "log4js": "^6.9.1",
     "node-fetch": "^3.3.2",
-    "ora": "~8.2.0"
+    "ora": "^8.2.0"
   }
 }
