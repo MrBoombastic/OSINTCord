@@ -1,7 +1,7 @@
-const {welcome, exit, saveMembers} = require("../../utils");
-const {bruteforce} = require("../../steps");
+import {exit, saveMembers, welcome} from "../../utils.js";
+import {bruteforce} from "../../steps.js";
 
-module.exports = async (client) => {
+export default async (client) => {
     welcome(client);
 
     // Getting target
@@ -10,8 +10,6 @@ module.exports = async (client) => {
         console.error("ERROR: selected guild is not available!\nAvailable guilds:", client.guilds.cache.map(x => `${x.name} (${x.id})`).join(", "));
         process.exit(1);
     }
-    const channel = await guild.channels.cache.get(process.env.CHANNEL_ID);
-    console.log(`Target acquired: ${guild.name} (${channel?.name || "NO CHANNEL"})`);
 
     // Fetching!
     if (guild.members.cache.size < guild.memberCount) await bruteforce(guild); // Method 3 - brute-force fetching

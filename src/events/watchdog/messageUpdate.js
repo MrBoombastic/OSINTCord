@@ -1,6 +1,6 @@
-const {downloadFile} = require("../../utils");
+import {downloadFile} from "../../utils.js";
 
-module.exports = async (client, oldMsg, newMsg) => {
+export default async (client, oldMsg, newMsg) => {
     if (oldMsg.guildId === process.env.GUILD_ID || process.env.GUILD_ID.toLowerCase() === "all") {
         if (oldMsg.embeds.length === 0 && newMsg.embeds.length > 0) return; //ignoring generating thumbnails for images
         let info = `[EDITED MESSAGE] Guild: ${oldMsg.guild.name} Channel: ${oldMsg.channel.name} Author: ${oldMsg.author?.tag} Bot: ${oldMsg.author?.bot}

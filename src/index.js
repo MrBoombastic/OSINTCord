@@ -1,9 +1,6 @@
-// Including libraries
-const {Client} = require("discord.js-selfbot-v13");
-global.dayjs = require("dayjs");
-dayjs.extend(require("dayjs/plugin/localizedFormat"));
-const {checkConfig, exit, saveMembers} = require("./utils.js");
-require('dotenv').config();
+import {Client} from "discord.js-selfbot-v13";
+import {checkConfig, exit, saveMembers} from "./utils.js";
+import 'dotenv/config';
 
 
 // Setting up client
@@ -16,22 +13,13 @@ if (!configStatus.success) {
     process.exit(1);
 }
 
-// Preparing date formatting
-try {
-    require(`dayjs/locale/${process.env.DATE_LOCALE}`);
-    dayjs.locale(process.env.DATE_LOCALE);
-} catch (e) {
-    console.warn(`WARNING: locale '${process.env.DATE_LOCALE}' not found. Using 'en' as fallback.`);
-    dayjs.locale("en");
-}
-
 const events = {
     watchdog: ["messageDelete", "messageUpdate", "ready"],
     members: ["ready"]
 };
 for (const file of events[process.env.MODE.toLowerCase()]) {
-    const event = require(`./events/${process.env.MODE.toLowerCase()}/${file}`);
-    client.on(file, event.bind(null, client));
+    const event = await import(`./events/${process.env.MODE.toLowerCase()}/${file}.js`);
+    client.on(file, event.default.bind(null, client));
 }
 
 process.on("SIGINT", async () => {

@@ -1,6 +1,7 @@
-const log4js = require("log4js");
-const {welcome} = require("../../utils");
-module.exports = async (client) => {
+import log4js from "log4js";
+import {welcome} from "../../utils.js";
+
+export default async (client) => {
     welcome(client);
 
     // Getting target
