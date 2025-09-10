@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import packagejson from "../package.json" assert {type: "json"};
+import packagejson from "../package.json" with {type: "json"};
 import fetch from "node-fetch";
 import dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat.js";
